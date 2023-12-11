@@ -1,0 +1,31 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Submission Form {% endblock %}
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+{% block content %}
+    <center>
+	{% for message in messages %}
+	    <div class="alert alert-success">{{ message }}</div>
+	{% endfor %}
+  <div class="form-row">
+    <div class="col-md-10">
+	<h1 id='form-item'>Submit a New Item Form</h1>
+  	<div class="form">
+		<br/><br/>
+		    <form role='form' action="{% url 'submission-form' %}" method="POST">
+		        <br/>
+		        {% csrf_token %}
+		        {{ form.as_p }}
+		        <input class="btn bg-gradient-dark mb-0" type="submit" value="Submit" class="btn btn-dark">
+		        <a class="btn bg-gradient-secondary mb-0" type="back" href="{% url 'index' %}"> Back</a>
+		    </form>
+    </div>
+  </div>
+</div>
+    </center>
+	{% endblock content %}
+
+	<!-- Specific Page JS goes HERE  -->
+	{% block javascripts %}{% endblock javascripts %}

@@ -1,0 +1,117 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid py-4">
+  <div class="row">
+    <div class="col-12">
+      <div class="card mb-4">
+        <div class="card-header pb-0">
+          <div class="row">
+            <div class="col-6 d-flex align-items-center">
+              <h6>Found Items {{ foundf.count }}</h6>
+                </div>
+                <div class="col-6 text-end">
+            <div class="col-lg-6 col-md-6 my-sm-auto ms-sm-auto me-sm-0 mx-auto">
+              <a class="btn bg-gradient-dark mb-0" href="{% url 'item-form' %}"><i class="fas fa-plus"></i>&nbsp;&nbsp;Add</a>
+            </div>
+        </div>
+      </div>
+        <div class="card-body px-0 pt-0 pb-2">
+          <div class="table-responsive p-0">
+            <table class="table align-items-center mb-0">
+              <thead>
+                <tr>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">#</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Serial Number</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Item</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Date</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Duty</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Detaile</th>
+                  <th class="text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Deliver</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for founds in found_list %}
+                <tr>
+                  <td>
+                    <div class="d-flex px-2 py-1">
+                      <div>
+                        {% if founds.qr_code %}
+                        <img src="{{ founds.qr_code_url }}" class="avatar avatar-sm me-3" alt="user1">
+                        {% else %}
+                          No Image</p>
+                        {% endif %}
+                      </div>
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm">{{forloop.counter }}</h6>
+                        <p class="text-xs text-secondary mb-0"></p>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <p class="text-xs font-weight-bold mb-0">{{ founds.serial_number}}</p>
+                    <p class="text-xs text-secondary mb-0"></p>
+                  </td>
+                  <td>
+                    <p class="text-xs font-weight-bold mb-0">{{ founds.item |truncatechars:10 }}</p>
+                    <p class="text-xs text-secondary mb-0">{{ founds.get_locations_display }}</p>
+                  </td>
+                 <!--  <td class="align-middle text-center text-sm">
+                    <span class="badge badge-sm bg-gradient-success">Online</span>
+                  </td> -->
+                  <td class="align-middle text-center">
+                    <span class="text-secondary text-xs font-weight-bold">{{ founds.date }}</span>
+                  </td>
+                  <td>
+                    <p class="text-xs font-weight-bold mb-0">
+                          {{ founds.user.first_name |title }} {{ founds.user.last_name |title}}
+                          {% if founds.user.first_name == '' %}
+                          {{ founds.user.username }}
+                          {% endif %}</p>
+                    <p class="text-xs text-secondary mb-0"></p>
+                  </td>                        
+                  <td class="align-middle">
+                    <a href="{% url 'found-detail' founds.id %}" class="text-secondary text-xs font-weight-bold" data-toggle="tooltip" data-original-title="Edit user">Detail
+                    </a>
+                  </td>
+                  <td class="align-middle">
+                    <a href="{% url 'deliver-form' founds.id %}" class="text-secondary font-weight-bold text-xs" data-toggle="tooltip" data-original-title="Edit user">Deliver
+                    </a>
+                  </td>
+                </tr>
+                {% endfor %}
+                  <!-- <td class="align-middle text-center text-sm">
+                    <span class="badge badge-sm bg-gradient-secondary">Offline</span>
+                  </td> -->
+              </tbody>
+            </table>
+              <div class="card-footer px-3 border-0 d-flex flex-column flex-lg-row align-items-center justify-content-between">
+                  <nav aria-label="Page navigation example">
+                      <ul class="pagination mb-0">
+                            
+                          <li class="{% if found_list.has_previous %} page-item {% else %} page-item disabled {% endif %}">
+                              <a class="page-link" href="?page={% if found_list.has_previous %}{{ found_list.previous_page_number }}{% endif %}"><</a>
+                            
+                          </li>
+                          {% for i in nums %}
+                          <li class="{% if found_list.number == forloop.counter %} page-item active {% else %} page-item {% endif %}">
+                              <a class="page-link" href="?page={{ forloop.counter }}">{{ forloop.counter }}</a>
+                          </li>
+                          {% endfor %}
+                          <li class="{% if found_list.has_next %} page-item {% else %} page-item disabled {% endif %}">
+                              <a class="page-link" href="?page={% if found_list.has_next %}{{ found_list.next_page_number }}{% endif %}">></a>
+                          </li>
+                      </ul>
+                  </nav>
+                <div class="fst-normal small mt-4 mt-lg-0">Showing <b>{{ found_list.number }}</b> out of <b>{{ found_list.paginator.num_pages }}</b> entries</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    {% include "includes/footer.html" %}
+
+  </div>
+  {% endblock content %}
